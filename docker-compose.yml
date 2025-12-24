@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  timelapse_cam1:
+    build: .
+    volumes:
+      - /var/cctv/cam1:/videos/input
+      - /var/cctv/cam1-timelapse:/videos/output
+
+  timelapse_cam2:
+    build: .
+    volumes:
+      - /var/cctv/cam2:/videos/input
+      - /var/cctv/cam2-timelapse:/videos/output
