@@ -40,7 +40,8 @@ for list in "$OUTPUT_DIR"/*.txt; do
     sed -i "s/^/file '/g" "$list"
     sed -i "s/$/'/g" "$list"
 
-    if ffmpeg -f concat -safe 0 -i "$list" -vf "setpts=PTS/30" -r 30 -an "$OUTPUT_DIR/timelapse-$day.mp4" -y; then
+    # Use ffmpeg to concatenate video files, select every 15th frame, and speed up the video by a factor of 30.
+    if ffmpeg -f concat -safe 0 -i "$list" -vf "select=not(mod(n,15)),setpts=PTS/30" -r 30 -an "$OUTPUT_DIR/timelapse-$day.mp4" -y; then
       echo "Created timelapse-$day.mp4. Moving processed files to archive..."
       for file_to_move in "${original_files[@]}"; do
         mv "$file_to_move" "$ARCHIVE_DIR/"
