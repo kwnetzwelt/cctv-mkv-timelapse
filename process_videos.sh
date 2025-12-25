@@ -4,6 +4,7 @@ set -e
 
 INPUT_DIR="/videos/input"
 OUTPUT_DIR="/videos/output"
+ARCHIVE_DIR="/videos/input/archive"
 
 if [ ! -d "$INPUT_DIR" ]; then
   echo "Input directory not found: $INPUT_DIR" >&2
@@ -12,6 +13,10 @@ fi
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
+fi
+
+if [ ! -d "$ARCHIVE_DIR" ]; then
+  mkdir -p "$ARCHIVE_DIR"
 fi
 
 find "$INPUT_DIR" -name '*.mkv' -daystart -mtime +0 -print0 | while IFS= read -r -d $'\0' file; do
@@ -38,7 +43,7 @@ for list in "$OUTPUT_DIR"/*.txt; do
     if ffmpeg -f concat -safe 0 -i "$list" -vf "setpts=PTS/30" -r 30 -an "$OUTPUT_DIR/timelapse-$day.mp4" -y; then
       echo "Created timelapse-$day.mp4. Moving processed files to archive..."
       for file_to_move in "${original_files[@]}"; do
-        mv "$file_to_move" "$INPUT_DIR/archive/"
+        mv "$file_to_move" "$ARCHIVE_DIR/"
       done
     else
       echo "Error creating timelapse for $day. Keeping files in input directory."
