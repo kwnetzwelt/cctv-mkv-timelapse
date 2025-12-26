@@ -45,7 +45,7 @@ find "$INPUT_DIR" -maxdepth 1 -mindepth 1 -type d | sort | while read -r day_dir
 
     ffmpeg -vaapi_device /dev/dri/renderD128 -err_detect ignore_err \
       -f concat -safe 0 -i "$CONCAT_LIST" \
-      -vf "select='not(mod(n,45))',setpts=N/FRAME_RATE/TB,format=nv12,hwupload,scale_vaapi=w=1280:h=720" \
+      -vf "select='not(mod(n,75))',setpts=N/FRAME_RATE/TB,format=nv12,hwupload,scale_vaapi=w=1280:h=720" \
       -c:v h264_vaapi \
       -preset slow \
       -global_quality 25 \
