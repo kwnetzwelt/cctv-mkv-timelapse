@@ -47,8 +47,8 @@ find "$INPUT_DIR" -maxdepth 1 -mindepth 1 -type d | sort | while read -r day_dir
       -f concat -safe 0 -i "$CONCAT_LIST" \
       -vf "select='not(mod(n,75))',setpts=N/FRAME_RATE/TB,format=nv12,hwupload,scale_vaapi=w=1280:h=720" \
       -c:v h264_vaapi \
-      -preset slow \
-      -global_quality 25 \
+      -preset fast \
+      -global_quality 30 \
       -an "$OUTPUT_FILE" -y < /dev/null
 
     # Check if FFmpeg actually succeeded
