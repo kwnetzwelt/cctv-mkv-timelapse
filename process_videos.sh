@@ -11,7 +11,7 @@ fi
 
 echo "Organizing files into date-based folders..."
 
-find "$INPUT_DIR" -maxdepth 1 -name '*.mkv' -mmin +30 -mtime 1 -print0 | while IFS= read -r -d $'\0' file; do
+find "$INPUT_DIR" -maxdepth 1 -name '*.mkv' -mmin +30 -print0 | while IFS= read -r -d $'\0' file; do
   # Get the modification date of the file in YYYY.mm.dd format
   date_dir=$(date -r "$file" +%Y.%m.%d)
   
