@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:bookworm-slim
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -24,6 +24,9 @@ WORKDIR /app
 
 COPY process_videos.sh .
 RUN chmod +x process_videos.sh
+
+COPY create_timelapse.sh .
+RUN chmod +x create_timelapse.sh
 
 # Add cron job
 COPY timelapse-cron /etc/cron.d/timelapse-cron
