@@ -1,6 +1,26 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
-RUN apt-get update && apt-get install -y ffmpeg cron
+# Avoid prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1. Install dependencies and enable non-free repository
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    cron \
+    ffmpeg \
+    gnupg \
+    software-properties-common \
+    && sed -i 's/Components: main/Components: main contrib non-free/' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update
+# 2. Install Intel Media Driver and VA-API tools
+RUN apt-get install -y --no-install-recommends \
+    intel-media-va-driver-non-free \
+    libmfx1 \
+    vainfo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for VA-API
+ENV LIBVA_DRIVER_NAME=iHD
 
 WORKDIR /app
 
