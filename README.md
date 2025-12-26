@@ -28,3 +28,5 @@ It groups the `.mkv` files by day (based on file modification time) and generate
 ## How it Works
 
 The `process_videos.sh` script finds all `.mkv` files in the input directory, groups them by their modification date, and then uses `ffmpeg` to create the timelapse. The `ffmpeg` command speeds up the video by a factor of 30 and creates a smooth 30fps MP4 file.
+
+After a timelapse is successfully created for a specific day, the script will automatically delete the corresponding input folder from `videos/input` to save space.

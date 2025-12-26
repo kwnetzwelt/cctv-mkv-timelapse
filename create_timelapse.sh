@@ -54,6 +54,8 @@ find "$INPUT_DIR" -maxdepth 1 -mindepth 1 -type d | sort | while read -r day_dir
     # Check if FFmpeg actually succeeded
     if [ $? -eq 0 ]; then
       echo "Successfully created $OUTPUT_FILE"
+      rm -rf "$day_dir"
+      echo "Deleted input folder: $day_dir"
     else
       echo "FFmpeg failed on $day"
     fi
