@@ -1,25 +1,29 @@
-FROM debian:bookworm-slim
+FROM ubuntu:latest
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-# 1. Install dependencies and enable non-free repository
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    cron \
-    ffmpeg \
-    gnupg \
-    software-properties-common \
-    && sed -i 's/Components: main/Components: main contrib non-free/' /etc/apt/sources.list.d/debian.sources \
-    && apt-get update
-# 2. Install Intel Media Driver and VA-API tools
+# Install dependencies, add PPA for ffmpeg
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends \
+        software-properties-common \
+        tzdata \
+        cron && \
+    add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
+    apt-get update
+
+# Install ffmpeg and Intel drivers
 RUN apt-get install -y --no-install-recommends \
-    intel-media-va-driver-non-free \
+    ffmpeg \
+    intel-media-va-driver \
     libmfx1 \
     vainfo \
     && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for VA-API
+# Note: The driver name might be different on Ubuntu or with this ffmpeg build.
+# Common values are iHD, i965.
 ENV LIBVA_DRIVER_NAME=iHD
 
 WORKDIR /app
@@ -33,9 +37,6 @@ RUN chmod 0644 /etc/cron.d/timelapse-cron
 
 # Create log file for cron
 RUN touch /var/log/cron.log
-
-# Create archive directory for processed files
-RUN mkdir -p /videos/input/archive
 
 # Run cron in the foreground
 CMD ["cron", "-f"]
