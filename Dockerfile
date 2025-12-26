@@ -4,25 +4,19 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
-# Install dependencies, add PPA for ffmpeg
+# Install dependencies from official Ubuntu repositories
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends \
-        software-properties-common \
         tzdata \
-        cron && \
-    add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
-    apt-get update
-
-# Install ffmpeg and Intel drivers
-RUN apt-get install -y --no-install-recommends \
-    ffmpeg \
-    intel-media-va-driver \
-    libmfx1 \
-    vainfo \
+        cron \
+        ffmpeg \
+        intel-media-va-driver \
+        libmfx1 \
+        vainfo \
     && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for VA-API
-# Note: The driver name might be different on Ubuntu or with this ffmpeg build.
+# Note: The driver name might be different on Ubuntu.
 # Common values are iHD, i965.
 ENV LIBVA_DRIVER_NAME=iHD
 
