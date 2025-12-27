@@ -11,7 +11,15 @@ fi
 mkdir -p "$OUTPUT_DIR"
 
 # Use find to get directories to avoid issues with spaces or empty globs
+CURRENT_DATE=$(date +%Y.%m.%d)
+
 find "$INPUT_DIR" -maxdepth 1 -mindepth 1 -type d | sort | while read -r day_dir; do
+    day=$(basename "$day_dir")
+
+    if [ "$day" == "$CURRENT_DATE" ]; then
+      echo "Skipping current day directory: $day"
+      continue
+    fi
     day=$(basename "$day_dir")
     OUTPUT_FILE="$OUTPUT_DIR/timelapse-$day.mp4"
 
